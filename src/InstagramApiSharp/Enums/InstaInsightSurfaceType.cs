@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InstagramApiSharp.Enums
 {
-    internal enum InstaInsightSurfaceType
+    public enum InstaInsightSurfaceType
     {
         Account,
         Post

@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace InstagramApiSharp.API.Versions
 {
-    internal class InstaApiVersionList
+    public class InstaApiVersionList
     {
         public static InstaApiVersionList GetApiVersionList() => new InstaApiVersionList();
 

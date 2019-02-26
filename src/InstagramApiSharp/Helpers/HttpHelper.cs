@@ -9,7 +9,7 @@ using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp.Helpers
 {
-    internal class HttpHelper
+    public class HttpHelper
     {
         public /*readonly*/ InstaApiVersion _apiVersion;
         public HttpHelper(InstaApiVersion apiVersionType)
@@ -147,5 +147,17 @@ namespace InstagramApiSharp.Helpers
             var signature = $"{hash}.{payload}";
             return signature;
         }
+
+        public string GetSignedStr(HttpMethod method,
+                                    Uri uri,
+                                    AndroidDevice deviceInfo,
+                                    Dictionary<string, string> data)
+        {
+            var hash = CryptoHelper.CalculateHash(_apiVersion.SignatureKey,
+                JsonConvert.SerializeObject(data));
+            var payload = JsonConvert.SerializeObject(data);
+            return $"{hash}.{payload}";
+        }
+
     }
 }

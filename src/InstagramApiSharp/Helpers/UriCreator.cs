@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace InstagramApiSharp.Helpers
 {
-    internal class UriCreator
+    public class UriCreator
     {
         private static readonly Uri BaseInstagramUri = new Uri(InstaApiConstants.INSTAGRAM_URL);
 

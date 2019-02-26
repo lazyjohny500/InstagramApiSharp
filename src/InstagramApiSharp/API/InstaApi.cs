@@ -25,7 +25,7 @@ namespace InstagramApiSharp.API
     /// <summary>
     ///     Base of everything that you want.
     /// </summary>
-    internal class InstaApi : IInstaApi
+    public class InstaApi : IInstaApi
     {
         #region Variables and properties
 
@@ -39,7 +39,7 @@ namespace InstagramApiSharp.API
         private InstaTwoFactorLoginInfo _twoFactorInfo;
         private InstaChallengeLoginInfo _challengeinfo;
         private UserSessionData _userSession;
-        private UserSessionData _user
+        public UserSessionData _user
         {
             get { return _userSession; }
             set { _userSession = value; _userAuthValidate.User = value; }

@@ -31,13 +31,13 @@ namespace InstagramApiSharp.API.Processors
     ///     Account api functions.
     ///     <para>Note: this is for self account.</para>
     /// </summary>
-    internal class AccountProcessor : IAccountProcessor
+    public class AccountProcessor : IAccountProcessor
     {
         #region Properties and constructor
         private readonly AndroidDevice _deviceInfo;
-        private readonly IHttpRequestProcessor _httpRequestProcessor;
+        public readonly IHttpRequestProcessor _httpRequestProcessor;
         private readonly IInstaLogger _logger;
-        private readonly UserSessionData _user;
+        public readonly UserSessionData _user;
         private readonly UserAuthValidate _userAuthValidate;
         private readonly InstaApi _instaApi;
         private readonly HttpHelper _httpHelper;

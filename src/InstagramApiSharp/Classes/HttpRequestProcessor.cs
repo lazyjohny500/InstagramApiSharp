@@ -6,7 +6,7 @@ using InstagramApiSharp.Logger;
 
 namespace InstagramApiSharp.Classes
 {
-    internal class HttpRequestProcessor : IHttpRequestProcessor
+    public class HttpRequestProcessor : IHttpRequestProcessor
     {
         private IRequestDelay _delay;
         private readonly IInstaLogger _logger;
