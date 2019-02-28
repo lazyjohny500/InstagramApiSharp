@@ -158,6 +158,5 @@ namespace InstagramApiSharp.Helpers
             var payload = JsonConvert.SerializeObject(data);
             return $"{hash}.{payload}";
         }
-
     }
 }
