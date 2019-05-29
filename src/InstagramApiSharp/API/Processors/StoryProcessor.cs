@@ -71,7 +71,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<bool>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<bool>(response, json);
 
                 return obj.Status.ToLower() == "ok" ? Result.Success(true) : Result.UnExpectedResponse<bool>(response, obj.Message, null);
             }
@@ -101,7 +101,9 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Story media id</param>
         /// <param name="title">Highlight title</param>
-        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title)
+        /// <param name="cropWidth">Crop width It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.19545822</param>
+        /// <param name="cropHeight">Crop height It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.8037307</param>
+        public async Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title, float cropWidth, float cropHeight)
         {
             UserAuthValidator.Validate(_userAuthValidate);
             try
@@ -109,7 +111,7 @@ namespace InstagramApiSharp.API.Processors
                 var cover = new JObject
                 {
                     {"media_id", mediaId},
-                    {"crop_rect", new JArray { 0.0, 0.19545822, 1.0, 0.8037307 }.ToString(Formatting.None) }
+                    {"crop_rect", new JArray { 0.0, cropWidth, 1.0, cropHeight }.ToString(Formatting.None) }
                 }.ToString(Formatting.None);
                 var data = new JObject
                 {
@@ -198,7 +200,16 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<bool>(exception);
             }
         }
-        
+
+        /// <summary>
+        ///     Follow countdown stories
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        public async Task<IResult<bool>> FollowCountdownStoryAsync(long countdownId)
+        {
+            return await FollowUnfollowCountdown(UriCreator.GetStoryFollowCountdownUri(countdownId));
+        }
+
         /// <summary>
         ///     Get list of users that blocked from seeing your stories
         /// </summary>
@@ -222,7 +233,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaDefault>(json);
 
                 if (response.StatusCode != HttpStatusCode.OK)
-                    return Result.UnExpectedResponse<InstaUserShortList>(response, obj.Message, null);
+                    return Result.UnExpectedResponse<InstaUserShortList>(response, json);
 
                 var usersResponse = JsonConvert.DeserializeObject<InstaUserListShortResponse>(json);
                 list.AddRange(
@@ -238,6 +249,36 @@ namespace InstagramApiSharp.API.Processors
             catch (Exception ex)
             {
                 return Result.Fail(ex, list);
+            }
+        }
+
+        /// <summary>
+        ///     Get stories countdowns for self accounts
+        /// </summary>
+        public async Task<IResult<InstaStoryCountdownList>> GetCountdownsStoriesAsync()
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var instaUri = UriCreator.GetStoryCountdownMediaUri();
+                var request = _httpHelper.GetDefaultRequest(HttpMethod.Get, instaUri, _deviceInfo);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaStoryCountdownList>(response, json);
+                var countdownListResponse = JsonConvert.DeserializeObject<InstaStoryCountdownListResponse>(json);
+                return Result.Success(ConvertersFabric.Instance.GetStoryCountdownListConverter(countdownListResponse).Convert());
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(InstaStoryCountdownList), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaStoryCountdownList>(exception);
             }
         }
 
@@ -336,7 +377,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
                     new InstaHighlightReelsListDataConverter());
 
-                return Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert());
+                return obj?.Reel != null ? Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert()) : Result.Fail<InstaHighlightSingleFeed>("No reels found");
             }
             catch (HttpRequestException httpException)
             {
@@ -382,7 +423,7 @@ namespace InstagramApiSharp.API.Processors
                 var obj = JsonConvert.DeserializeObject<InstaHighlightReelResponse>(json,
                     new InstaHighlightReelsListDataConverter());
 
-                return Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert());
+                return obj?.Reel != null ? Result.Success(ConvertersFabric.Instance.GetHighlightReelConverter(obj).Convert()) : Result.Fail<InstaHighlightSingleFeed>("No reels found");
             }
             catch (HttpRequestException httpException)
             {
@@ -409,7 +450,7 @@ namespace InstagramApiSharp.API.Processors
                 var response = await _httpRequestProcessor.SendAsync(request);
                 var json = await response.Content.ReadAsStringAsync();
                 
-                if (response.StatusCode != HttpStatusCode.OK) return Result.Fail("", (InstaStoryFeed) null);
+                if (response.StatusCode != HttpStatusCode.OK) return Result.UnExpectedResponse<InstaStoryFeed>(response, json);
                 var storyFeedResponse = JsonConvert.DeserializeObject<InstaStoryFeedResponse>(json);
                 var instaStoryFeed = ConvertersFabric.Instance.GetStoryFeedConverter(storyFeedResponse).Convert();
                 return Result.Success(instaStoryFeed);
@@ -853,6 +894,15 @@ namespace InstagramApiSharp.API.Processors
                 _logger?.LogException(exception);
                 return Result.Fail<bool>(exception);
             }
+        }
+
+        /// <summary>
+        ///     UnFollow countdown stories
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        public async Task<IResult<bool>> UnFollowCountdownStoryAsync(long countdownId)
+        {
+            return await FollowUnfollowCountdown(UriCreator.GetStoryUnFollowCountdownUri(countdownId));
         }
 
         /// <summary>
@@ -1581,7 +1631,7 @@ namespace InstagramApiSharp.API.Processors
 
                         data.Add("story_sliders", sliderArr.ToString(Formatting.None));
                         if (uploadOptions.Slider.IsSticker)
-                            data.Add("story_sticker_ids", $"emoji_slider_{uploadOptions.Slider.Emoji}");
+                            data.Add("story_sticker_ids", $"{uploadOptions.Slider.Emoji}");
                     }
                     else
                     {
@@ -1619,6 +1669,16 @@ namespace InstagramApiSharp.API.Processors
                             mentionArr.Add(item.ConvertToJson());
 
                         data.Add("reel_mentions", mentionArr.ToString(Formatting.None));
+                    }
+                    if (uploadOptions.Countdown != null)
+                    {
+                        var countdownArr = new JArray
+                        {
+                            uploadOptions.Countdown.ConvertToJson()
+                        };
+
+                        data.Add("story_countdowns", countdownArr.ToString(Formatting.None));
+                        data.Add("story_sticker_ids", "countdown_sticker_time");
                     }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
@@ -1774,6 +1834,17 @@ namespace InstagramApiSharp.API.Processors
                             data.Add("story_questions", questionArr.ToString(Formatting.None));
                         }
                     }
+
+                    if (uploadOptions.Countdown != null)
+                    {
+                        var countdownArr = new JArray
+                        {
+                            uploadOptions.Countdown.ConvertToJson()
+                        };
+
+                        data.Add("story_countdowns", countdownArr.ToString(Formatting.None));
+                        data.Add("story_sticker_ids", "countdown_sticker_time");
+                    }
                 }
                 var request = _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
                 var uploadParamsObj = new JObject
@@ -1870,7 +1941,40 @@ namespace InstagramApiSharp.API.Processors
                 return Result.Fail<InstaStoryPollVotersListResponse>(exception);
             }
         }
+        public async Task<IResult<bool>> FollowUnfollowCountdown(Uri instaUri)
+        {
+            UserAuthValidator.Validate(_userAuthValidate);
+            try
+            {
+                var data = new JObject
+                {
+                    {"_uuid", _deviceInfo.DeviceGuid.ToString()},
+                    {"_uid", _user.LoggedInUser.Pk},
+                    {"_csrftoken", _user.CsrfToken},
+                };
 
+                var request =  _httpHelper.GetSignedRequest(HttpMethod.Post, instaUri, _deviceInfo, data);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                var json = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<bool>(response, json);
+
+                var resp = JsonConvert.DeserializeObject<InstaDefaultResponse>(json);
+
+                return resp.IsSucceed ? Result.Success(true) : Result.Fail<bool>("");
+            }
+            catch (HttpRequestException httpException)
+            {
+                _logger?.LogException(httpException);
+                return Result.Fail(httpException, default(bool), ResponseType.NetworkProblem);
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<bool>(exception);
+            }
+        }
 
         #region Old functions
 

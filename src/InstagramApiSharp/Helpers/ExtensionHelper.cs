@@ -17,6 +17,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
+using InstagramApiSharp.Helpers;
 namespace InstagramApiSharp
 {
     internal static class ExtensionHelper
@@ -261,7 +262,7 @@ namespace InstagramApiSharp
                 {"viewer_vote", -1.0},
                 {"slider_vote_average", 0.0},
                 {"background_color", slider.BackgroundColor},
-                {"emoji", $"emoji_slider_{slider.Emoji}"},
+                {"emoji", $"{slider.Emoji}"},
                 {"text_color", slider.TextColor},
                 {"is_sticker", slider.IsSticker},
             };
@@ -312,6 +313,28 @@ namespace InstagramApiSharp
                 {"background_color", question.BackgroundColor},
                 {"text_color", question.TextColor},
                 {"is_sticker", question.IsSticker},
+            };
+        }
+
+        public static JObject ConvertToJson(this InstaStoryCountdownUpload countdown)
+        {
+            return new JObject
+            {
+                {"x", countdown.X},
+                {"y", countdown.Y},
+                {"z", countdown.Z},
+                {"width", countdown.Width},
+                {"height", countdown.Height},
+                {"rotation", countdown.Rotation},
+                {"text", countdown.Text},
+                {"start_background_color", countdown.StartBackgroundColor},
+                {"end_background_color", countdown.EndBackgroundColor},
+                {"digit_color", countdown.DigitColor},
+                {"digit_card_color", countdown.DigitCardColor},
+                {"end_ts", countdown.EndTime.ToUnixTime()},
+                {"text_color", countdown.TextColor},
+                {"following_enabled", countdown.FollowingEnabled},
+                {"is_sticker", countdown.IsSticker}
             };
         }
     }

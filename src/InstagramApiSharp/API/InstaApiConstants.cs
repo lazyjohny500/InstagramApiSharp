@@ -253,6 +253,7 @@ namespace InstagramApiSharp.API
         public const string DISCOVER_AYML = API_SUFFIX + "/discover/ayml/";
         public const string DISCOVER_CHAINING = API_SUFFIX + "/discover/chaining/?target_id={0}";
         public const string DISCOVER_EXPLORE = API_SUFFIX + "/discover/explore/";
+        public const string DISCOVER_TOPICAL_EXPLORE = API_SUFFIX + "/discover/topical_explore/";
         public const string DISCOVER_FETCH_SUGGESTION_DETAILS = API_SUFFIX + "/discover/fetch_suggestion_details/?target_id={0}&chained_ids={1}";
         public const string DISCOVER_TOP_LIVE = API_SUFFIX + "/discover/top_live/";
         public const string DISCOVER_TOP_LIVE_STATUS = API_SUFFIX + "/discover/top_live_status/";
@@ -489,6 +490,9 @@ namespace InstagramApiSharp.API
         public const string MEDIA_STORY_POLL_VOTE = API_SUFFIX + "/media/{0}/{1}/story_poll_vote/";
         public const string MEDIA_STORY_SLIDER_VOTE = API_SUFFIX + "/media/{0}/{1}/story_slider_vote/";
         public const string MEDIA_STORY_QUESTION_RESPONSE = API_SUFFIX + "/media/{0}/{1}/story_question_response/";
+        public const string MEDIA_STORY_COUNTDOWNS = API_SUFFIX + "/media/story_countdowns/";
+        public const string MEDIA_FOLLOW_COUNTDOWN = API_SUFFIX + "/media/{0}/follow_story_countdown/";
+        public const string MEDIA_UNFOLLOW_COUNTDOWN = API_SUFFIX + "/media/{0}/unfollow_story_countdown/";
 
         #endregion Media endpoints constants
 
@@ -526,6 +530,7 @@ namespace InstagramApiSharp.API
         public const string TAG_FOLLOW = API_SUFFIX + "/tags/follow/{0}/";
         public const string TAG_RANKED = API_SUFFIX + "/tags/{0}/ranked_sections/";
         public const string TAG_RECENT = API_SUFFIX + "/tags/{0}/recent_sections/";
+        public const string TAG_SECTION = API_SUFFIX + "/tags/{0}/sections/";
         /// <summary>
         /// queries:
         /// <para>visited = [{"id":"TAG ID","type":"hashtag"}]</para>
@@ -581,6 +586,8 @@ namespace InstagramApiSharp.API
         public const string MEGAPHONE_LOG = API_SUFFIX + "/megaphone/log/";
 
         public const string QE_EXPOSE = API_SUFFIX + "/qe/expose/";
+
+        public const string CHALLENGE = API_SUFFIX + "/challenge/";
 
         #endregion Other endpoints constants
 

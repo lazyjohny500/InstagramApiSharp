@@ -12,7 +12,7 @@ namespace InstagramApiSharp.Helpers
     public class HttpHelper
     {
         public /*readonly*/ InstaApiVersion _apiVersion;
-        public HttpHelper(InstaApiVersion apiVersionType)
+        internal HttpHelper(InstaApiVersion apiVersionType)
         {
             _apiVersion = apiVersionType;
         }

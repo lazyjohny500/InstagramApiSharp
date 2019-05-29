@@ -91,7 +91,10 @@ namespace InstagramApiSharp.Classes
                 var status = ErrorHandlingHelper.GetBadStatusFromJsonString(json);
                 var responseType = GetResponseType(status);
 
-                var resultInfo = new ResultInfo(responseType, status);
+                var resultInfo = new ResultInfo(responseType, status)
+                {
+                    Challenge = status.Challenge
+                };
                 return new Result<T>(false, default(T), resultInfo);
             }
         }
@@ -109,7 +112,11 @@ namespace InstagramApiSharp.Classes
                 var status = ErrorHandlingHelper.GetBadStatusFromJsonString(json);
                 var responseType = GetResponseType(status);
 
-                var resultInfo = new ResultInfo(responseType, message);
+                var resultInfo = new ResultInfo(responseType, message)
+                {
+                    Challenge = status.Challenge
+                };
+
                 return new Result<T>(false, default(T), resultInfo);
             }
         }
@@ -174,8 +181,8 @@ namespace InstagramApiSharp.Classes
             if (status.Spam)
                 responseType = ResponseType.Spam;
 
-            //if (!string.IsNullOrEmpty(status.Message) && status.Message.Contains("challenge_required"))
-            //    responseType = ResponseType.ChallengeRequired;
+            if (status?.Message?.IndexOf("challenge_required") != -1)
+                responseType = ResponseType.ChallengeRequired;
             return responseType;
         }
     }

@@ -24,7 +24,9 @@ namespace InstagramApiSharp.API.Processors
         /// </summary>
         /// <param name="mediaId">Story media id</param>
         /// <param name="title">Highlight title</param>
-        Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title);
+        /// <param name="cropWidth">Crop width It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.19545822</param>
+        /// <param name="cropHeight">Crop height It depends on the aspect ratio/size of device display and the aspect ratio of story uploaded. must be in a range of 0-1, i.e: 0.8037307</param>
+        Task<IResult<InstaHighlightFeed>> CreateHighlightFeedAsync(string mediaId, string title, float cropWidth, float cropHeight);
 
         /// <summary>
         ///     Delete highlight feed
@@ -42,9 +44,20 @@ namespace InstagramApiSharp.API.Processors
         Task<IResult<bool>> DeleteStoryAsync(string storyMediaId, InstaSharingType sharingType = InstaSharingType.Video);
 
         /// <summary>
+        ///     Follow countdown story
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        Task<IResult<bool>> FollowCountdownStoryAsync(long countdownId);
+
+        /// <summary>
         ///     Get list of users that blocked from seeing your stories
         /// </summary>
         Task<IResult<InstaUserShortList>> GetBlockedUsersFromStoriesAsync();
+
+        /// <summary>
+        ///     Get stories countdowns for self accounts
+        /// </summary>
+        Task<IResult<InstaStoryCountdownList>> GetCountdownsStoriesAsync();
 
         /// <summary>
         ///     Get user highlight feeds by user id (pk)
@@ -183,6 +196,12 @@ namespace InstagramApiSharp.API.Processors
         /// <param name="userId">Story owner user pk (get it from <see cref="InstaMedia.User.Pk"/>)</param>
         /// <param name="text">Text to send</param>
         Task<IResult<bool>> ReplyToStoryAsync(string storyMediaId, long userId, string text);
+
+        /// <summary>
+        ///     UnFollow countdown story
+        /// </summary>
+        /// <param name="countdownId">Countdown id (<see cref="InstaStoryCountdownStickerItem.CountdownId"/>)</param>
+        Task<IResult<bool>> UnFollowCountdownStoryAsync(long countdownId);
 
         /// <summary>
         ///     Upload story photo

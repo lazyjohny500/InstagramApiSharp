@@ -956,5 +956,29 @@ namespace InstagramApiSharp.Converters
         {
             return new InstaStoryLocationConverter { SourceObject = response };
         }
+
+        public IObjectConverter<InstaStoryCountdownList, InstaStoryCountdownListResponse> GetStoryCountdownListConverter(
+            InstaStoryCountdownListResponse response)
+        {
+            return new InstaStoryCountdownListConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaRelatedHashtag, InstaRelatedHashtagResponse> GetRelatedHashtagConverter(
+            InstaRelatedHashtagResponse response)
+        {
+            return new InstaRelatedHashtagConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTopicalExploreCluster, InstaTopicalExploreClusterResponse> GetExploreClusterConverter(
+            InstaTopicalExploreClusterResponse response)
+        {
+            return new InstaTopicalExploreClusterConverter { SourceObject = response };
+        }
+
+        public IObjectConverter<InstaTopicalExploreFeed, InstaTopicalExploreFeedResponse> GetTopicalExploreFeedConverter(
+            InstaTopicalExploreFeedResponse response)
+        {
+            return new InstaTopicalExploreFeedConverter { SourceObject = response };
+        }
     }
 }

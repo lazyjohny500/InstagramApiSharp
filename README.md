@@ -3,10 +3,15 @@ A complete Private Instagram API for .NET (C#, VB.NET).
 
 Supports almost every features that Instagram app has!
 
+-----
+# Public project is not maintained anymore. [#233](https://github.com/ramtinak/InstagramApiSharp/issues/233)
+# Project will continue to support with subscriptions as an Private project [#243](https://github.com/ramtinak/InstagramApiSharp/issues/243) and check [#244](https://github.com/ramtinak/InstagramApiSharp/issues/244) for changelogs.
+
+-----
 | Target | Branch | Version | Download link | Total downloads |
 | ------ | ------ | ------ | ------ | ------ |
-| Nuget | master | v1.3.4.3 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
-| Release | master | v1.3.4.3 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
+| Nuget | master | v1.4.0.0 | [![NuGet](https://img.shields.io/nuget/v/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) | [![NuGet downloads](https://img.shields.io/nuget/dt/InstagramApiSharp.svg)](https://www.nuget.org/packages/InstagramApiSharp) |
+| Release | master | v1.4.0.0 | [![Release](http://s9.picofile.com/file/8353468992/releases.PNG)](https://github.com/ramtinak/InstagramApiSharp/releases/latest) | |
 
 ## IMPORTANT NOTE:
 `PaginationParameters` updated, you must use `NextMaxId` instead of using old `NextId`!!!!!
@@ -92,6 +97,37 @@ Task<IResult<object>>
 Check [Wiki pages](https://github.com/ramtinak/InstagramApiSharp/wiki) for documentation.
 
 ## Version changes
+v1.4.0.0
+- [Add] GetTopicalExploreFeedAsync to FeedProcessor (new explore page)
+	Supports explore categories, ig tv videos
+
+v1.3.5.0
+- [Add] UserTag support in InstaVideoUpload (video upload with user tags)
+- [Add] video usertags support for uploading album
+
+v1.3.4.6
+- [Bugfix] for slider emoji in story upload
+- [Add] CropWidth and CropHeight as parameter for CreateHighlightFeedAsync (thx to [@szokeptr](https://github.com/szokeptr))
+- [Add] LastPermanentItem property to InstaDirectInboxThread by [@estgold](https://github.com/estgold)
+- [Add] RelatedHashtags to GetTopHashtagMediaListAsync 
+- [Update] GetTopHashtagMediaListAsync
+- [Update] GetRecentHashtagMediaListAsync
+- [Update] api version to 86.0.0.24.87 (it's default now)
+
+v1.3.4.5
+- [Add] GetLoggedInChallengeDataInfoAsync to IInstaApi
+- [Add] AcceptChallengeAsync to IInstaApi [THIS IS ME feature]  (check [#204](https://github.com/ramtinak/InstagramApiSharp/issues/#204))
+- [Bugfix] for highlights media converter
+- [Bugfix] for challenge response for logged in user
+
+v1.3.4.4
+- [Bugfix] for login with 2FA enabled (thx to [@vivan-snapretail](https://github.com/vivan-snapretail) for report)
+- [Add] Dashmanifest property for postlive
+- [Add] Support Uploading Story Countdown in InstaStoryUploadOptions
+- [Add] GetCountdownsStoriesAsync to StoryProcessor
+- [Add] FollowCountdownStoryAsync to StoryProcessor
+- [Add] UnFollowCountdownStoryAsync to StoryProcessor
+
 v1.3.4.3
 - [Bugfix] for BusinessProcessor.GetStatisticsAsync [ by [@estgold](https://github.com/estgold) ]
 - [Bugfix] for GetStoryMediaViewersAsync (thx to [@tommasoceschia](https://github.com/tommasoceschia) for report)
@@ -110,64 +146,6 @@ v1.3.4.1
 - [Add] support for Questions in InstaStoryUploadOptions
 - [Update] facebook login function
 - [Update] story slider
-
-v1.3.4.0
-- [Add] IWebProcessor to IInstaApi (instagram web api for account data)
-- [Add] GetAccountInfoAsync to WebProcessor
-- [Add] GetFollowRequestsAsync to WebProcessor
-- [Add] GetFormerBiographyTextsAsync to WebProcessor
-- [Add] GetFormerBiographyLinksAsync to WebProcessor
-- [Add] GetFormerUsernamesAsync to WebProcesor
-- [Add] GetFormerFullNamesAsync to WebProcessor
-- [Add] GetFormerPhoneNumbersAsync to WebProcessor
-- [Add] GetFormerEmailsAsync to WebProcessor
-
-v1.3.3.5
-- [Bugfix] for GetDirectInboxThreadAsync pagination (thx to [@Hoaas](https://github.com/hoaas) for report)
-- [Add] VisualMedia support in direct thread item (check [#174](https://github.com/ramtinak/InstagramApiSharp/issues/174) issue) (thx to [@aspmaker](https://github.com/aspmaker) for report)
-- [Add] ActionBlockEnd to ResultInfo (Displaying ActionBlock end date. Used For awaiting liking etc.) (thx to [@mihey8800](https://github.com/mihey8800) for PR)
-- [Add] Videos property to InstaInboxMedia (direct media item)
-- [Update] direct item Users and LeftUsers models class
-- [Remove] StartFromId function from PaginationParameters class (use StartFromMaxId instead)
-
-v1.3.3.4
-- [Update] InstaUserInfo (thx to [@RowanFazio](https://github.com/rowanFazio) for PR)
-- [Change] InstaStory.Items to InstaStoryItem
-- [Add] StoryQuestionsResponderInfos property to InstaStoryItem
-- [Add] Countdowns property to InstaStoryItem
-- [Add] ImportedTakenAt property to InstaStoryItem
-- [Add] AnswerToStoryQuestionAsync to StoryProcessor
-- [Add] support for Mentions in InstaStoryUploadOptions
-
-v1.3.3.3
-- [Bugfix] for GetUserFollowersAsync
-- [Bugfix] for GetUserFollowingAsync
-- [Rename] GetLocationFeedAsync to GetLocationStoriesAsync
-- [Rename] InstaHashtagMediaList to InstaSectionMediaList
-- [Add] some new properties to PaginationParameters
-- [Add] GetTopLocationFeedsAsync to LocationProcessor 
-- [Add] GetRecentLocationFeedsAsync to LocationProcessor
-- [Add] GetAccountDetailsAsync to BusinessProcessor
-- [Update] GetRecentHashtagMediaListAsync pagination 
-- [Update] GetUserTimelineFeedAsync pull refresh
-
-v1.3.3.2
-- [Add] InstaStoryFriendshipStatus class
-- [Update] GetStoryFeedAsync
-- [Update] GetUserStoryAsync
-- [Update] GetFullUserInfoAsync
-- [Update] GetFriendshipStatusAsync
-- [Update] BlockUserAsync/UnBlockUserAsync
-- [Update] IgnoreFriendshipRequestAsync
-- [Update] HideMyStoryFromUserAsync/UnHideMyStoryFromUserAsync
-- [Update] MuteFriendStoryAsync/UnMuteFriendStoryAsync
-- [Update] MuteUserMediaAsync/UnMuteUserMediaAsync
-- [Update] FollowUserAsync/UnFollowUserAsync
-- [Update] InstaStory.FriendshipStatus (support muting)
-- [Update] InstaFullUserInfo.UserDetail.FriendshipStatus
-- [Update] InstaStoryFeed.Broadcasts
-- [Update] InstaStoryFeed.PostLives
-- [Update] InstaReelFeed.FriendshipStatus
 
 [Version changes](https://github.com/ramtinak/InstagramApiSharp/wiki/Version-changes) page
 
@@ -213,4 +191,4 @@ This code is in no way affiliated with, authorized, maintained, sponsored or end
 
 
 
-Iranian developers - (c) 2019 | Tabestan - Zemestan 1397.
+Iranian developers - (c) 2019 | Bahar 1398.

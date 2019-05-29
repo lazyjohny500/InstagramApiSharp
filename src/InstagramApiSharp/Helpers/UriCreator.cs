@@ -282,6 +282,14 @@ namespace InstagramApiSharp.Helpers
             return instaUri;
         }
 
+        public static Uri GetChallengeUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.CHALLENGE,
+                    out var instaUri))
+                throw new Exception("Cant create URI for challenge url");
+            return instaUri;
+        }
+
         public static Uri GetChallengeRequireUri(string apiPath)
         {
             if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.API_SUFFIX + apiPath, out var instaUri))
@@ -2198,6 +2206,63 @@ namespace InstagramApiSharp.Helpers
             if (!Uri.TryCreate(BaseInstagramUri,
                 string.Format(InstaApiConstants.MEDIA_STORY_QUESTION_RESPONSE, storyId, questionid), out var instaUri))
                 throw new Exception("Cant create URI for story question answer");
+            return instaUri;
+        }
+
+        public static Uri GetStoryCountdownMediaUri()
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.MEDIA_STORY_COUNTDOWNS, out var instaUri))
+                throw new Exception("Cant create URI for story countdown media");
+            return instaUri;
+        }
+
+        public static Uri GetStoryFollowCountdownUri(long countdownId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_FOLLOW_COUNTDOWN, countdownId), out var instaUri))
+                throw new Exception("Cant create URI for story follow countdown");
+            return instaUri;
+        }
+
+        public static Uri GetStoryUnFollowCountdownUri(long countdownId)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.MEDIA_UNFOLLOW_COUNTDOWN, countdownId), out var instaUri))
+                throw new Exception("Cant create URI for story unfollow countdown");
+            return instaUri;
+        }
+
+        public static Uri GetHashtagSectionUri(string hashtag)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.TAG_SECTION, hashtag), out var instaUri))
+                throw new Exception("Cant create URI for hashtag section");
+            return instaUri;
+        }
+
+        public static Uri GetTopicalExploreUri(string sessionId, string maxId = null, string clusterId = null)
+        {
+            if (!Uri.TryCreate(BaseInstagramUri, InstaApiConstants.DISCOVER_TOPICAL_EXPLORE, out var instaUri))
+                throw new Exception("Cant create URI for topical explore");
+
+            instaUri = instaUri
+                .AddQueryParameter("is_prefetch", "false")
+                .AddQueryParameter("module", "explore_popular")
+                .AddQueryParameter("use_sectional_payload", "true")
+                .AddQueryParameter("timezone_offset", InstaApiConstants.TIMEZONE_OFFSET.ToString())
+                .AddQueryParameter("session_id", sessionId)
+                .AddQueryParameter("include_fixed_destinations", "false");
+
+            if (clusterId.ToLower() == "explore_all:0" || clusterId.ToLower() == "explore_all%3A0")
+            {
+                if (!string.IsNullOrEmpty(maxId))
+                {
+                    instaUri = instaUri.AddQueryParameter("max_id", maxId);
+                    instaUri = instaUri.AddQueryParameter("cluster_id", "explore_all%3A0");
+                }
+            }
+            else
+            {
+                instaUri = instaUri.AddQueryParameter("cluster_id", clusterId);
+                instaUri = instaUri.AddQueryParameter("max_id", maxId);
+            }
             return instaUri;
         }
     }
