@@ -5,14 +5,13 @@ using InstagramApiSharp.API;
 using InstagramApiSharp.Classes.Android.DeviceInfo;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using InstagramApiSharp.Enums;
 using InstagramApiSharp.API.Versions;
 namespace InstagramApiSharp.Helpers
 {
     public class HttpHelper
     {
         public /*readonly*/ InstaApiVersion _apiVersion;
-        internal HttpHelper(InstaApiVersion apiVersionType)
+        public HttpHelper(InstaApiVersion apiVersionType)
         {
             _apiVersion = apiVersionType;
         }
